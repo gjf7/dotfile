@@ -13,6 +13,11 @@ function set_proxy
     set -gx HTTPS_PROXY $PROXY_HTTP
     git config --global http.proxy "$PROXY_HTTP"
     git config --global https.proxy "$PROXY_HTTP"
+    if type -q npm
+      npm config set proxy $PROXY_HTTP
+      npm config set https-proxy $PROXY_HTTP
+    else
+    end
 end
 
 function unset_proxy
