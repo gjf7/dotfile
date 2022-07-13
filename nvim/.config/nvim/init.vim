@@ -105,6 +105,8 @@ au BufNewFile,BufRead *.flow set filetype=javascript
 au BufNewFile,BufRead *.fish set filetype=fish
 " docker file
 au BufNewFile,BufRead Containerfile,Dockerfile,*.Dockerfile	setf dockerfile
+" Java
+au BufNewFile,BufRead *.java,*.jav setf java
 
 set suffixesadd=.js,.es,.jsx,.json,.css,.less,.sass,.styl,.php,.py,.md
 

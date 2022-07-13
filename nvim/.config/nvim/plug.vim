@@ -40,6 +40,7 @@ if has("nvim")
   Plug 'rcarriga/nvim-dap-ui'
   Plug 'theHamsta/nvim-dap-virtual-text'
   Plug 'shaunsingh/nord.nvim'
+  Plug 'mfussenegger/nvim-jdtls'
 endif
 
 Plug 'groenewege/vim-less', { 'for': 'less' }
