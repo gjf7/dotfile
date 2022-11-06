@@ -68,7 +68,7 @@ end
 
 
 -- Set up completion using nvim_cmp with LSP source
-local capabilities = require('cmp_nvim_lsp').update_capabilities(
+local capabilities = require('cmp_nvim_lsp').default_capabilities(
   vim.lsp.protocol.make_client_capabilities()
 )
 
@@ -81,7 +81,7 @@ local capabilities = require('cmp_nvim_lsp').update_capabilities(
 
 local util = require 'lspconfig.util'
 local function get_typescript_server_path(root_dir)
-  local global_ts = '/home/haochen/.local/share/nvim/lsp_servers/tsserver/lib/tsserverlibrary.js'
+  local global_ts = '/home/haochen/.local/share/pnpm/global/5/node_modules/typescript/lib/tsserverlibrary.js'
   -- Alternative location if installed as root:
   -- local global_ts = '/usr/local/lib/node_modules/typescript/lib/tsserverlibrary.js'
   local found_ts = ''
@@ -148,6 +148,7 @@ nvim_lsp.diagnosticls.setup {
       typescript = 'eslint',
       typescriptreact = 'eslint',
       markdown = 'eslint',
+      json='eslint'
     },
     formatters = {
       eslint_d = {
@@ -181,6 +182,11 @@ nvim_lsp.diagnosticls.setup {
 
 -- docker
 nvim_lsp.dockerls.setup{
+  on_attach = on_attach,
+  capabilities = capabilities
+}
+-- python
+nvim_lsp.pyright.setup{
   on_attach = on_attach,
   capabilities = capabilities
 }

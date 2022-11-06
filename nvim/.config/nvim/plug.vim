@@ -41,6 +41,8 @@ if has("nvim")
   Plug 'theHamsta/nvim-dap-virtual-text'
   Plug 'shaunsingh/nord.nvim'
   Plug 'mfussenegger/nvim-jdtls'
+  Plug 'kylechui/nvim-surround'
+  Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
 endif
 
 Plug 'groenewege/vim-less', { 'for': 'less' }

@@ -1,5 +1,7 @@
 set fish_greeting ""
 
+set -gx TERM xterm-256color
+
 # mount disk
 sudo mount -a
 # wsl proxy
@@ -23,6 +25,9 @@ set -gx EDITOR nvim
 set -gx PATH bin $PATH
 set -gx PATH ~/bin $PATH
 set -gx PATH ~/.local/bin $PATH
+set -gx JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64/bin/java
+set -gx PATH /usr/local/go/bin $PATH
+set -gx PATH $JAVA_HOME/bin $PATH
 
 # NVM
 function __check_rvm --on-variable PWD --description 'Do nvm stuff'
@@ -41,3 +46,7 @@ starship init fish | source
 set -gx PNPM_HOME "/home/haochen/.local/share/pnpm"
 set -gx PATH "$PNPM_HOME" $PATH
 # pnpm end
+
+# tabtab source for packages
+# uninstall by removing these lines
+[ -f ~/.config/tabtab/fish/__tabtab.fish ]; and . ~/.config/tabtab/fish/__tabtab.fish; or true

@@ -5,5 +5,5 @@ require("nvim-lsp-installer").setup({
             server_pending = "➜",
             server_uninstalled = "✗"
         }
-    }
+    },
 })

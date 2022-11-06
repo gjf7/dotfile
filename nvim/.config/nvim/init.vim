@@ -33,6 +33,8 @@ if has('nvim')
   set inccommand=split
 endif
 
+" Vim Hexokinase
+let g:Hexokinase_highlighters = ['foregroundfull']
 " Suppress appending <PasteStart> and <PasteEnd> when pasting
 set t_BE=
 
@@ -106,13 +108,14 @@ au BufNewFile,BufRead *.fish set filetype=fish
 " docker file
 au BufNewFile,BufRead Containerfile,Dockerfile,*.Dockerfile	setf dockerfile
 " Java
-au BufNewFile,BufRead *.java,*.jav setf java
+au BufNewFile,BufRead *.java,*.jav	setf java
 
 set suffixesadd=.js,.es,.jsx,.json,.css,.less,.sass,.styl,.php,.py,.md
 
 autocmd FileType coffee setlocal shiftwidth=2 tabstop=2
 autocmd FileType ruby setlocal shiftwidth=2 tabstop=2
 autocmd FileType yaml setlocal shiftwidth=2 tabstop=2
+autocmd FileType java setlocal shiftwidth=4 tabstop=4
 
 "}}}
 
@@ -130,6 +133,7 @@ if has('win32')
   runtime ./windows.vim
 endif
 
+runtime ./windows.vim
 runtime ./maps.vim
 "}}}
 

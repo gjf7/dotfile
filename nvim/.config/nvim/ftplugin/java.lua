@@ -1,11 +1,17 @@
 -- If you started neovim within `~/dev/xy/project-1` this would resolve to `project-1`
 local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
 
-local workspace_dir = '/mnt/cloud/project/' .. project_name
+local home = os.getenv('HOME')
+local workspace_dir = home .. '/.local/share/jdtls/workspace' .. project_name
 --                                               ^^
 --                                               string concattenation in Lua
 
 local protocol = require'vim.lsp.protocol'
+
+
+local capabilities = require('cmp_nvim_lsp').update_capabilities(
+  vim.lsp.protocol.make_client_capabilities()
+)
 
 -- Use an on_attach function to only map the following keys 
 -- after the language server attaches to the current buffer
@@ -65,6 +71,7 @@ end
 -- See `:help vim.lsp.start_client` for an overview of the supported `config` options.
 local config = {
   ont_attach = on_attach,
+  capabilities = capabilities,
   -- The command that starts the language server
   -- See: https://github.com/eclipse/eclipse.jdt.ls#running-from-the-command-line
   cmd = {
@@ -84,14 +91,14 @@ local config = {
     '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
 
     -- 💀
-    '-jar', '/home/haochen/.local/share/jdtls/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar',
+    '-jar', home .. '/.local/share/jdtls/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar',
          -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                       ^^^^^^^^^^^^^^
          -- Must point to the                                                     Change this to
          -- eclipse.jdt.ls installation                                           the actual version
 
 
     -- 💀
-    '-configuration', '/home/haochen/.local/share/jdtls/config_linux',
+    '-configuration', home .. '/.local/share/jdtls/config_linux',
                     -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^        ^^^^^^
                     -- Must point to the                      Change to one of `linux`, `win` or `mac`
                     -- eclipse.jdt.ls installation            Depending on your system.
