@@ -28,6 +28,8 @@ function unset_proxy
     set --erase HTTPS_PROXY
     git config --global --unset http.proxy
     git config --global --unset https.proxy
+    npm config delete proxy
+    npm config delete https-proxy
 end
 
 function test_proxy

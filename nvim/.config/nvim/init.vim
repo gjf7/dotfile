@@ -98,6 +98,7 @@ au BufNewFile,BufRead *.es6 setf javascript
 " TypeScript
 au BufNewFile,BufRead *.tsx setf typescriptreact
 au BufNewFile,BufRead *.ts setf typescript
+au BufNewFile,BufRead *.vue setf vue
 " Markdown
 au BufNewFile,BufRead *.md set filetype=markdown
 au BufNewFile,BufRead *.mdx set filetype=markdown
