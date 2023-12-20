@@ -30,9 +30,6 @@ keymap.set("n", "+", "<C-a>")
 keymap.set("n", "-", "<C-x>")
 -- Select all
 keymap.set("n", "<C-a>", "gg<S-v>G") -- New tab
-keymap.set("n", "te", ":tabedit")
-keymap.set("n", "<tab>", ":tabnext<Return>", options)
-keymap.set("n", "<s-tab>", ":tabprev<Return>", options)
 -- Split window
 keymap.set("n", "ss", ":split<Return>", options)
 keymap.set("n", "sv", ":vsplit<Return>", options)
@@ -70,6 +67,6 @@ require("lazy").setup({
 
 vim.g.nord_italic = false
 vim.g.nord_bold = false
-vim.cmd[[colorscheme nord]]
+vim.cmd[[ colorscheme nord ]]
 -- Enable matchit
 vim.cmd[[ runtime macros/matchit.vim ]]
