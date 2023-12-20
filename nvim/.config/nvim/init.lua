@@ -21,7 +21,7 @@ vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.mouse = ""
 
--- key mappings
+-- Key mappings
 local keymap = vim.keymap
 local options = { noremap = true, silent = true }
 
@@ -48,7 +48,7 @@ keymap.set("n", "<C-w><up>", "<C-w>+")
 keymap.set("n", "<C-w><down>", "<C-w>-")
 
 
--- plugin manager
+-- Plugin manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim" if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({
 		"git",
@@ -71,3 +71,5 @@ require("lazy").setup({
 vim.g.nord_italic = false
 vim.g.nord_bold = false
 vim.cmd[[colorscheme nord]]
+-- Enable matchit
+vim.cmd[[ runtime macros/matchit.vim ]]
