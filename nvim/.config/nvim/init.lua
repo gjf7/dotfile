@@ -64,7 +64,8 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = " " -- Make sure to set `mapleader` before lazy so your mappings are correct
 require("lazy").setup({
   "shaunsingh/nord.nvim",
-  "tpope/vim-commentary"
+  "tpope/vim-commentary",
+  "tpope/vim-surround"
 })
 
 vim.g.nord_italic = false
