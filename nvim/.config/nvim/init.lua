@@ -4,8 +4,8 @@ vim.opt.smartindent = true
 vim.opt.smarttab = true
 vim.opt.expandtab = true
 vim.opt.hlsearch = false
-vim.opt.history = 200
-vim.opt.tabstop = 2 -- treat tab as two spaces
+vim.opt.history = 200 -- treat tab as two spaces
+vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.clipboard = "unnamedplus"
 vim.opt.scrolloff = 10
@@ -13,15 +13,19 @@ vim.opt.smartindent = true
 vim.opt.cmdheight = 1
 vim.opt.inccommand = "nosplit"
 vim.opt.ignorecase = true
-vim.opt.nrformats = "" -- treat all numerals as decimal
+vim.opt.list = true
+vim.opt.listchars = { trail = '·', nbsp = ':', space = '·' }
 vim.opt.wrap = false
 vim.opt.path:append({ "**" })
 vim.opt.wildignore:append({ "*/node_modules/*" })
 vim.opt.splitbelow = true
 vim.opt.splitright = true
+vim.opt.termguicolors = true
 vim.opt.mouse = ""
 
 -- Key mappings
+vim.g.mapleader = " " -- Make sure to set `mapleader` before lazy so your mappings are correct
+
 local keymap = vim.keymap
 local options = { noremap = true, silent = true }
 
@@ -44,13 +48,10 @@ keymap.set("n", "<C-w><right>", "<C-w>>")
 keymap.set("n", "<C-w><up>", "<C-w>+")
 keymap.set("n", "<C-w><down>", "<C-w>-")
 
-
 -- Plugin manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim" if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({
-		"git",
-		"clone",
-		"--filter=blob:none",
+		"git", "clone", "--filter=blob:none",
 		"https://github.com/folke/lazy.nvim.git",
 		"--branch=stable", -- latest stable release
 		lazypath,
@@ -58,15 +59,152 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim" if not vim.loop.fs_
 end
 vim.opt.rtp:prepend(lazypath)
 
-vim.g.mapleader = " " -- Make sure to set `mapleader` before lazy so your mappings are correct
 require("lazy").setup({
   "shaunsingh/nord.nvim",
   "tpope/vim-commentary",
-  "tpope/vim-surround"
+  "tpope/vim-surround",
+  "easymotion/vim-easymotion",
+  {
+    'stevearc/oil.nvim',
+    opts = {},
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    config = function ()
+      local configs = require("nvim-treesitter.configs")
+
+      configs.setup({
+        auto_install = true, -- depend on tree-sitter-cli
+        highlight = { enable = true },
+        indent = { enable = true },
+      })
+    end
+  },
+  { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+  {
+    'nvim-telescope/telescope.nvim', tag = '0.1.6',
+    dependencies = { 'nvim-lua/plenary.nvim' }
+  },
+  {
+    "hrsh7th/nvim-cmp",
+    lazy = false,
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-path",
+      "hrsh7th/cmp-buffer",
+      { "L3MON4D3/LuaSnip", version = "v2.*", build = "make install_jsregexp" },
+      "saadparwaiz1/cmp_luasnip",
+      "neovim/nvim-lspconfig",
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+    }
+  },
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' }
+  }
 })
 
+-- Plugin config
 vim.g.nord_italic = false
 vim.g.nord_bold = false
 vim.cmd[[ colorscheme nord ]]
--- Enable matchit
-vim.cmd[[ runtime macros/matchit.vim ]]
+
+
+require("oil").setup({
+  view_options = { show_hidden = true, },
+  float = {
+    max_width = 40,
+    max_height = 40,
+  },
+  delete_to_trash = true,
+  skip_confirm_for_simple_edits = true,
+});
+keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "Open parent directory" })
+
+
+require("ibl").setup()
+require("lualine").setup({
+  options = { theme = "nord" }
+})
+
+
+
+local builtin = require('telescope.builtin')
+local function run_in_git_root(fn)
+  return function()
+    local root = string.gsub(vim.fn.system("git rev-parse --show-toplevel"), "\n", "")
+    if vim.v.shell_error == 0 then
+      fn({ cwd = root })
+    else
+      fn()
+    end
+  end
+end
+keymap.set('n', '<leader>ff', run_in_git_root(builtin.find_files), options)
+keymap.set('n', '<leader>fg', run_in_git_root(builtin.live_grep), options)
+keymap.set('n', '<leader>fb', run_in_git_root(builtin.buffers), options)
+keymap.set('n', '<leader>fh', run_in_git_root(builtin.help_tags), options)
+
+
+local lspconfig = require("lspconfig")
+require("mason").setup()
+require("mason-lspconfig").setup({
+  ensure_installed = { "lua_ls", "clangd", "vtsls", "marksman", "pyright", "eslint", "cssls", "typos_lsp" },
+  handlers = {
+    function (server_name) -- default handler (optional)
+      require("lspconfig")[server_name].setup({})
+    end,
+    ["lua_ls"] = function ()
+      lspconfig.lua_ls.setup({
+        settings = {
+          Lua = {
+            diagnostics = {
+              globals = { "vim" }
+            }
+          }
+        }
+      })
+    end,
+    ["eslint"] = function ()
+      lspconfig.eslint.setup({
+        on_attach = function(_, bufnr)
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            buffer = bufnr,
+            command = "EslintFixAll",
+          })
+        end,
+      })
+    end,
+    ["typos_lsp"] = function ()
+      lspconfig.typos_lsp.setup({
+        init_options = {
+          diagnosticSeverity = "Hint"
+        }
+      })
+    end
+  }
+})
+keymap.set("n", "gh", vim.lsp.buf.hover, options)
+keymap.set("n", "gd", vim.lsp.buf.definition, options)
+keymap.set("n", "gt", vim.lsp.buf.type_definition, options)
+keymap.set("n", "ga", vim.lsp.buf.code_action, options)
+keymap.set("n", "<C-j>", vim.diagnostic.goto_next, options)
+
+
+local cmp = require("cmp")
+cmp.setup({
+  snippet = {
+    expand = function(args)
+      require("luasnip").lsp_expand(args.body)
+    end,
+  },
+  sources = {
+    { name = "nvim_lsp" },
+    { name = "path" },
+    { name = "buffer" },
+  },
+  mapping = cmp.mapping.preset.insert(),
+})
