@@ -15,7 +15,6 @@ vim.opt.inccommand = "nosplit"
 vim.opt.ignorecase = true
 vim.opt.list = true
 vim.opt.listchars = { trail = '·', nbsp = ':', space = '·' }
-vim.opt.wrap = false
 vim.opt.path:append({ "**" })
 vim.opt.wildignore:append({ "*/node_modules/*" })
 vim.opt.splitbelow = true
@@ -94,7 +93,12 @@ require("lazy").setup({
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-buffer",
-      { "L3MON4D3/LuaSnip", version = "v2.*", build = "make install_jsregexp" },
+      {
+        "L3MON4D3/LuaSnip",
+        version = "v2.*",
+        build = "make install_jsregexp",
+        dependencies = { "rafamadriz/friendly-snippets" },
+      },
       "saadparwaiz1/cmp_luasnip",
       "neovim/nvim-lspconfig",
       "williamboman/mason.nvim",
@@ -103,8 +107,18 @@ require("lazy").setup({
   },
   {
     'nvim-lualine/lualine.nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons' }
-  }
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {
+      options = { theme = "nord" }
+    }
+  },
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function() vim.fn["mkdp#util#install"]() end,
+  },
+  {"ellisonleao/glow.nvim", opts = { options = { width = 120 } }, cmd = "Glow"}
 })
 
 -- Plugin config
@@ -123,13 +137,6 @@ require("oil").setup({
   skip_confirm_for_simple_edits = true,
 });
 keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "Open parent directory" })
-
-
-require("ibl").setup()
-require("lualine").setup({
-  options = { theme = "nord" }
-})
-
 
 
 local builtin = require('telescope.builtin')
@@ -152,7 +159,7 @@ keymap.set('n', '<leader>fh', run_in_git_root(builtin.help_tags), options)
 local lspconfig = require("lspconfig")
 require("mason").setup()
 require("mason-lspconfig").setup({
-  ensure_installed = { "lua_ls", "clangd", "vtsls", "marksman", "pyright", "eslint", "cssls", "typos_lsp" },
+  ensure_installed = { "lua_ls", "clangd", "vtsls", "pyright", "eslint", "cssls", "typos_lsp" },
   handlers = {
     function (server_name) -- default handler (optional)
       require("lspconfig")[server_name].setup({})
@@ -201,10 +208,12 @@ cmp.setup({
       require("luasnip").lsp_expand(args.body)
     end,
   },
-  sources = {
+  sources = cmp.config.sources({
     { name = "nvim_lsp" },
     { name = "path" },
     { name = "buffer" },
-  },
+    { name = "luasnip" }
+  }),
   mapping = cmp.mapping.preset.insert(),
 })
+require("luasnip.loaders.from_vscode").lazy_load()
