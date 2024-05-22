@@ -175,6 +175,11 @@ require("mason-lspconfig").setup({
         }
       })
     end,
+    ["clangd"] = function ()
+      lspconfig.clangd.setup({
+        cmd = { "clangd", "--offset-encoding=utf-16" }
+      })
+    end,
     ["eslint"] = function ()
       lspconfig.eslint.setup({
         on_attach = function(_, bufnr)
