@@ -14,7 +14,7 @@ vim.opt.cmdheight = 1
 vim.opt.inccommand = "nosplit"
 vim.opt.ignorecase = true
 vim.opt.list = true
-vim.opt.listchars = { trail = '·', nbsp = ':', space = '·' }
+vim.opt.listchars = { eol = '↲', tab = '→ ', trail = '·', nbsp = ':', space = '·', extends = '›', precedes = '‹' }
 vim.opt.path:append({ "**" })
 vim.opt.wildignore:append({ "*/node_modules/*" })
 vim.opt.splitbelow = true
@@ -59,7 +59,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-  "shaunsingh/nord.nvim",
+  "gbprod/nord.nvim",
   "tpope/vim-commentary",
   "tpope/vim-surround",
   "easymotion/vim-easymotion",
@@ -124,7 +124,7 @@ require("lazy").setup({
 -- Plugin config
 vim.g.nord_italic = false
 vim.g.nord_bold = false
-vim.cmd[[ colorscheme nord ]]
+vim.cmd.colorscheme("nord")
 
 
 require("oil").setup({
@@ -204,6 +204,7 @@ keymap.set("n", "gd", vim.lsp.buf.definition, options)
 --keymap.set("n", "gt", vim.lsp.buf.type_definition, options)
 keymap.set("n", "ga", vim.lsp.buf.code_action, options)
 keymap.set("n", "<C-j>", vim.diagnostic.goto_next, options)
+keymap.set("n", "gr", vim.lsp.buf.rename, options)
 
 
 local cmp = require("cmp")
@@ -270,3 +271,4 @@ require('gitsigns').setup({
     map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
   end
 })
+
