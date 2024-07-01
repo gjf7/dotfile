@@ -5,6 +5,8 @@ export TERM=xterm-256color
 export EDITOR=nvim
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="/opt/homebrew/opt/openjdk@11/bin:$PATH"
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+export PATH="/opt/homebrew/lib/ruby/gems/3.3.0/bin:$PATH"
 
 alias ls="ls -lash"
 alias g="git"
