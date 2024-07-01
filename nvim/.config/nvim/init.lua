@@ -154,6 +154,7 @@ keymap.set('n', '<leader>ff', run_in_git_root(builtin.find_files), options)
 keymap.set('n', '<leader>fg', run_in_git_root(builtin.live_grep), options)
 keymap.set('n', '<leader>fb', run_in_git_root(builtin.buffers), options)
 keymap.set('n', '<leader>fh', run_in_git_root(builtin.help_tags), options)
+keymap.set('n', '<leader>fr', run_in_git_root(builtin.resume), options)
 
 
 local lspconfig = require("lspconfig")
