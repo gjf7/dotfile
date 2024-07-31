@@ -82,7 +82,7 @@ require("lazy").setup({
       })
     end
   },
-  { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+  { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {}, cond = not vim.g.vscode },
   {
     'nvim-telescope/telescope.nvim', tag = '0.1.6',
     dependencies = { 'nvim-lua/plenary.nvim' }
@@ -111,7 +111,8 @@ require("lazy").setup({
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = {
       options = { theme = "nord" }
-    }
+    },
+    cond = not vim.g.vscode
   },
   {
     "iamcco/markdown-preview.nvim",
@@ -122,9 +123,11 @@ require("lazy").setup({
 })
 
 -- Plugin config
-vim.g.nord_italic = false
-vim.g.nord_bold = false
-vim.cmd.colorscheme("nord")
+if not vim.g.vscode then
+  vim.g.nord_italic = false
+  vim.g.nord_bold = false
+  vim.cmd.colorscheme("nord")
+end
 
 
 require("oil").setup({
@@ -157,55 +160,62 @@ keymap.set('n', '<leader>fh', run_in_git_root(builtin.help_tags), options)
 keymap.set('n', '<leader>fr', run_in_git_root(builtin.resume), options)
 
 
-local lspconfig = require("lspconfig")
-require("mason").setup()
-require("mason-lspconfig").setup({
-  ensure_installed = { "lua_ls", "clangd", "vtsls", "pyright", "eslint", "cssls", "typos_lsp" },
-  handlers = {
-    function (server_name) -- default handler (optional)
-      require("lspconfig")[server_name].setup({})
-    end,
-    ["lua_ls"] = function ()
-      lspconfig.lua_ls.setup({
-        settings = {
-          Lua = {
-            diagnostics = {
-              globals = { "vim" }
+if not vim.g.vscode then
+  local lspconfig = require("lspconfig")
+  require("mason").setup()
+  require("mason-lspconfig").setup({
+    ensure_installed = { "lua_ls", "clangd", "vtsls", "pyright", "eslint", "cssls", "typos_lsp" },
+    handlers = {
+      function (server_name) -- default handler (optional)
+        require("lspconfig")[server_name].setup({})
+      end,
+      ["lua_ls"] = function ()
+        lspconfig.lua_ls.setup({
+          settings = {
+            Lua = {
+              diagnostics = {
+                globals = { "vim" }
+              }
             }
           }
-        }
-      })
-    end,
-    ["clangd"] = function ()
-      lspconfig.clangd.setup({
-        cmd = { "clangd", "--offset-encoding=utf-16" }
-      })
-    end,
-    ["eslint"] = function ()
-      lspconfig.eslint.setup({
-        on_attach = function(_, bufnr)
-          vim.api.nvim_create_autocmd("BufWritePre", {
-            buffer = bufnr,
-            command = "EslintFixAll",
-          })
-        end,
-      })
-    end,
-    ["typos_lsp"] = function ()
-      lspconfig.typos_lsp.setup({
-        init_options = {
-          diagnosticSeverity = "Hint"
-        }
-      })
-    end
-  }
-})
+        })
+      end,
+      ["clangd"] = function ()
+        lspconfig.clangd.setup({
+          cmd = { "clangd", "--offset-encoding=utf-16" }
+        })
+      end,
+      ["eslint"] = function ()
+        lspconfig.eslint.setup({
+          on_attach = function(_, bufnr)
+            vim.api.nvim_create_autocmd("BufWritePre", {
+              buffer = bufnr,
+              command = "EslintFixAll",
+            })
+          end,
+        })
+      end,
+      ["typos_lsp"] = function ()
+        lspconfig.typos_lsp.setup({
+          init_options = {
+            diagnosticSeverity = "Hint"
+          }
+        })
+      end
+    }
+  })
+end
+
 keymap.set("n", "gh", vim.lsp.buf.hover, options)
 keymap.set("n", "gd", vim.lsp.buf.definition, options)
 --keymap.set("n", "gt", vim.lsp.buf.type_definition, options)
 keymap.set("n", "ga", vim.lsp.buf.code_action, options)
 keymap.set("n", "<C-j>", vim.diagnostic.goto_next, options)
 keymap.set("n", "gr", vim.lsp.buf.rename, options)
+if vim.g.vscode then
+  local vscode = require('vscode')
+  keymap.set("n", "gd", function() vscode.action('editor.action.revealDefinition') end, options)
+end
 
 
 local cmp = require("cmp")
