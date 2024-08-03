@@ -15,8 +15,8 @@ if command -v nvim > /dev/null 2>&1; then
   alias vim='nvim'
 fi
 
-if type exa > /dev/null 2>&1; then
-  alias ll='exa -l -g --icons'
+if type eza > /dev/null 2>&1; then
+  alias ll='eza -l -g --icons --no-time --no-user'
   alias lla='ll -a'
 fi
 
