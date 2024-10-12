@@ -47,6 +47,21 @@ keymap.set("n", "<C-w><right>", "<C-w>>")
 keymap.set("n", "<C-w><up>", "<C-w>+")
 keymap.set("n", "<C-w><down>", "<C-w>-")
 
+vim.api.nvim_create_autocmd("InsertEnter", {
+  pattern = "*",
+  callback = function()
+    vim.wo.relativenumber = false
+  end
+})
+
+-- Disable relative numbers when leaving Insert mode
+vim.api.nvim_create_autocmd("InsertLeave", {
+  pattern = "*",
+  callback = function()
+    vim.wo.relativenumber = true
+  end
+})
+
 -- Plugin manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim" if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({
@@ -212,11 +227,6 @@ keymap.set("n", "gd", vim.lsp.buf.definition, options)
 keymap.set("n", "ga", vim.lsp.buf.code_action, options)
 keymap.set("n", "<C-j>", vim.diagnostic.goto_next, options)
 keymap.set("n", "gr", vim.lsp.buf.rename, options)
-if vim.g.vscode then
-  local vscode = require('vscode')
-  keymap.set("n", "gd", function() vscode.action('editor.action.revealDefinition') end, options)
-end
-
 
 local cmp = require("cmp")
 cmp.setup({
@@ -282,4 +292,9 @@ require('gitsigns').setup({
     map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
   end
 })
+
+if vim.g.vscode then
+  local vscode = require('vscode')
+  keymap.set("n", "gd", function() vscode.action('editor.action.revealDefinition') end, options)
+end
 
