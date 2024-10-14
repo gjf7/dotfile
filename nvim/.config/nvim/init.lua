@@ -103,6 +103,27 @@ require("lazy").setup({
     dependencies = { 'nvim-lua/plenary.nvim' }
   },
   {
+    'nvimdev/lspsaga.nvim',
+    config = function()
+      require('lspsaga').setup({
+        code_action = {
+          extend_gitsigns = true
+        }
+      })
+      keymap.set("n", "gh", "<cmd>Lspsaga hover_doc<CR>", options)
+      keymap.set("n", "gd", "<cmd>Lspsaga goto_definition<CR>", options)
+      keymap.set("n", "gt", "<cmd>Lspsaga goto_type_definition<CR>",options)
+      keymap.set("n", "ga", "<cmd>Lspsaga code_action<CR>", options)
+      keymap.set("n", "<C-j>", "<cmd>Lspsaga diagnostic_jump_next<CR>", options)
+      keymap.set("n", "<C-k>", "<cmd>Lspsaga diagnostic_jump_prev<CR>", options)
+      keymap.set("n", "gr", "<cmd>Lspsaga rename<CR>", options)
+    end,
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+      'nvim-tree/nvim-web-devicons',
+    }
+  },
+  {
     "hrsh7th/nvim-cmp",
     lazy = false,
     dependencies = {
@@ -172,7 +193,8 @@ keymap.set('n', '<leader>ff', run_in_git_root(builtin.find_files), options)
 keymap.set('n', '<leader>fg', run_in_git_root(builtin.live_grep), options)
 keymap.set('n', '<leader>fb', run_in_git_root(builtin.buffers), options)
 keymap.set('n', '<leader>fh', run_in_git_root(builtin.help_tags), options)
-keymap.set('n', '<leader>fr', run_in_git_root(builtin.resume), options)
+keymap.set('n', '<leader>fx', run_in_git_root(builtin.resume), options)
+keymap.set('n', '<leader>fr', run_in_git_root(builtin.lsp_references), options)
 
 
 if not vim.g.vscode then
@@ -220,13 +242,6 @@ if not vim.g.vscode then
     }
   })
 end
-
-keymap.set("n", "gh", vim.lsp.buf.hover, options)
-keymap.set("n", "gd", vim.lsp.buf.definition, options)
---keymap.set("n", "gt", vim.lsp.buf.type_definition, options)
-keymap.set("n", "ga", vim.lsp.buf.code_action, options)
-keymap.set("n", "<C-j>", vim.diagnostic.goto_next, options)
-keymap.set("n", "gr", vim.lsp.buf.rename, options)
 
 local cmp = require("cmp")
 cmp.setup({
