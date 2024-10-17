@@ -87,8 +87,8 @@ require("lazy").setup({
       require("oil").setup({
         view_options = { show_hidden = true, },
         float = {
-          max_width = 40,
-          max_height = 40,
+          max_width = 80,
+          max_height = 80,
         },
         delete_to_trash = true,
         skip_confirm_for_simple_edits = true,
@@ -185,7 +185,7 @@ require("lazy").setup({
       })
       keymap.set("n", "gh", "<cmd>Lspsaga hover_doc<CR>", options)
       keymap.set("n", "gd", "<cmd>Lspsaga goto_definition<CR>", options)
-      keymap.set("n", "gt", "<cmd>Lspsaga goto_type_definition<CR>",options)
+      -- keymap.set("n", "gt", "<cmd>Lspsaga goto_type_definition<CR>",options)
       keymap.set("n", "ga", "<cmd>Lspsaga code_action<CR>", options)
       keymap.set("n", "<C-j>", "<cmd>Lspsaga diagnostic_jump_next<CR>", options)
       keymap.set("n", "<C-k>", "<cmd>Lspsaga diagnostic_jump_prev<CR>", options)
