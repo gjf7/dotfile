@@ -34,13 +34,8 @@ keymap.set("n", "-", "<C-x>")
 -- Select all
 keymap.set("n", "<C-a>", "gg<S-v>G") -- New tab
 -- Split window
-keymap.set("n", "ss", ":split<Return>", options)
-keymap.set("n", "sv", ":vsplit<Return>", options)
--- Move window
-keymap.set("n", "sh", "<C-w>h")
-keymap.set("n", "sk", "<C-w>k")
-keymap.set("n", "sj", "<C-w>j")
-keymap.set("n", "sl", "<C-w>l")
+-- keymap.set("n", "ss", ":split<Return>", options)
+-- keymap.set("n", "sv", ":vsplit<Return>", options)
 -- Resize window
 keymap.set("n", "<C-w><left>", "<C-w><")
 keymap.set("n", "<C-w><right>", "<C-w>>")
@@ -74,16 +69,87 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-  "gbprod/nord.nvim",
+  {
+    "gbprod/nord.nvim",
+    cond = not vim.g.vscode,
+    config = function()
+      vim.g.nord_italic = false
+      vim.g.nord_bold = false
+      vim.cmd.colorscheme("nord")
+    end,
+  },
   "tpope/vim-commentary",
   "tpope/vim-surround",
-  "easymotion/vim-easymotion",
   {
     'stevearc/oil.nvim',
-    opts = {},
+    cond = not vim.g.vscode,
+    config = function()
+      require("oil").setup({
+        view_options = { show_hidden = true, },
+        float = {
+          max_width = 40,
+          max_height = 40,
+        },
+        delete_to_trash = true,
+        skip_confirm_for_simple_edits = true,
+      });
+      keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "Open parent directory" })
+    end,
     dependencies = { "nvim-tree/nvim-web-devicons" },
   },
-  { "lewis6991/gitsigns.nvim" },
+  {
+    "lewis6991/gitsigns.nvim",
+    cond = not vim.g.vscode,
+    config = function()
+      require('gitsigns').setup({
+        current_line_blame_opts = { delay= 100 },
+        on_attach = function(bufnr)
+          local gitsigns = require('gitsigns')
+
+          local function map(mode, l, r, opts)
+            opts = opts or {}
+            opts.buffer = bufnr
+            vim.keymap.set(mode, l, r, opts)
+          end
+
+          -- Navigation
+          map('n', ']c', function()
+            if vim.wo.diff then
+              vim.cmd.normal({']c', bang = true})
+            else
+              gitsigns.nav_hunk('next')
+            end
+          end)
+
+          map('n', '[c', function()
+            if vim.wo.diff then
+              vim.cmd.normal({'[c', bang = true})
+            else
+              gitsigns.nav_hunk('prev')
+            end
+          end)
+
+          -- Actions
+          map('n', '<leader>hs', gitsigns.stage_hunk)
+          map('n', '<leader>hr', gitsigns.reset_hunk)
+          map('v', '<leader>hs', function() gitsigns.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
+          map('v', '<leader>hr', function() gitsigns.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
+          map('n', '<leader>hS', gitsigns.stage_buffer)
+          map('n', '<leader>hu', gitsigns.undo_stage_hunk)
+          map('n', '<leader>hR', gitsigns.reset_buffer)
+          map('n', '<leader>hp', gitsigns.preview_hunk)
+          map('n', '<leader>hb', function() gitsigns.blame_line{full=true} end)
+          map('n', '<leader>tb', gitsigns.toggle_current_line_blame)
+          map('n', '<leader>hd', gitsigns.diffthis)
+          map('n', '<leader>hD', function() gitsigns.diffthis('~') end)
+          map('n', '<leader>td', gitsigns.toggle_deleted)
+
+          -- Text object
+          map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+        end
+      })
+    end,
+  },
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
@@ -97,13 +163,20 @@ require("lazy").setup({
       })
     end
   },
-  { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {}, cond = not vim.g.vscode },
   {
-    'nvim-telescope/telescope.nvim', tag = '0.1.6',
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    opts = {},
+    cond = not vim.g.vscode
+  },
+  {
+    'nvim-telescope/telescope.nvim',
+    tag = '0.1.6',
     dependencies = { 'nvim-lua/plenary.nvim' }
   },
   {
     'nvimdev/lspsaga.nvim',
+    cond = not vim.g.vscode,
     config = function()
       require('lspsaga').setup({
         code_action = {
@@ -125,7 +198,26 @@ require("lazy").setup({
   },
   {
     "hrsh7th/nvim-cmp",
+    cond = not vim.g.vscode,
     lazy = false,
+    config = function()
+      local cmp = require("cmp")
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            require("luasnip").lsp_expand(args.body)
+          end,
+        },
+        sources = cmp.config.sources({
+          { name = "nvim_lsp" },
+          { name = "path" },
+          { name = "buffer" },
+          { name = "luasnip" }
+        }),
+        mapping = cmp.mapping.preset.insert(),
+      })
+      require("luasnip.loaders.from_vscode").lazy_load()
+    end,
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-path",
@@ -151,32 +243,27 @@ require("lazy").setup({
     cond = not vim.g.vscode
   },
   {
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    ---@type Flash.Config
+    opts = {},
+    -- stylua: ignore
+    keys = {
+      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+      { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+      { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+    },
+  },
+  {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     ft = { "markdown" },
+    cond = not vim.g.vscode,
     build = function() vim.fn["mkdp#util#install"]() end,
   },
 })
-
--- Plugin config
-if not vim.g.vscode then
-  vim.g.nord_italic = false
-  vim.g.nord_bold = false
-  vim.cmd.colorscheme("nord")
-end
-
-
-require("oil").setup({
-  view_options = { show_hidden = true, },
-  float = {
-    max_width = 40,
-    max_height = 40,
-  },
-  delete_to_trash = true,
-  skip_confirm_for_simple_edits = true,
-});
-keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "Open parent directory" })
-
 
 local builtin = require('telescope.builtin')
 local function run_in_git_root(fn)
@@ -243,73 +330,15 @@ if not vim.g.vscode then
   })
 end
 
-local cmp = require("cmp")
-cmp.setup({
-  snippet = {
-    expand = function(args)
-      require("luasnip").lsp_expand(args.body)
-    end,
-  },
-  sources = cmp.config.sources({
-    { name = "nvim_lsp" },
-    { name = "path" },
-    { name = "buffer" },
-    { name = "luasnip" }
-  }),
-  mapping = cmp.mapping.preset.insert(),
-})
-require("luasnip.loaders.from_vscode").lazy_load()
-
-require('gitsigns').setup({
-  current_line_blame_opts = { delay= 100 },
-  on_attach = function(bufnr)
-    local gitsigns = require('gitsigns')
-
-    local function map(mode, l, r, opts)
-      opts = opts or {}
-      opts.buffer = bufnr
-      vim.keymap.set(mode, l, r, opts)
-    end
-
-    -- Navigation
-    map('n', ']c', function()
-      if vim.wo.diff then
-        vim.cmd.normal({']c', bang = true})
-      else
-        gitsigns.nav_hunk('next')
-      end
-    end)
-
-    map('n', '[c', function()
-      if vim.wo.diff then
-        vim.cmd.normal({'[c', bang = true})
-      else
-        gitsigns.nav_hunk('prev')
-      end
-    end)
-
-    -- Actions
-    map('n', '<leader>hs', gitsigns.stage_hunk)
-    map('n', '<leader>hr', gitsigns.reset_hunk)
-    map('v', '<leader>hs', function() gitsigns.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
-    map('v', '<leader>hr', function() gitsigns.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
-    map('n', '<leader>hS', gitsigns.stage_buffer)
-    map('n', '<leader>hu', gitsigns.undo_stage_hunk)
-    map('n', '<leader>hR', gitsigns.reset_buffer)
-    map('n', '<leader>hp', gitsigns.preview_hunk)
-    map('n', '<leader>hb', function() gitsigns.blame_line{full=true} end)
-    map('n', '<leader>tb', gitsigns.toggle_current_line_blame)
-    map('n', '<leader>hd', gitsigns.diffthis)
-    map('n', '<leader>hD', function() gitsigns.diffthis('~') end)
-    map('n', '<leader>td', gitsigns.toggle_deleted)
-
-    -- Text object
-    map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
-  end
-})
-
 if vim.g.vscode then
   local vscode = require('vscode')
   keymap.set("n", "gd", function() vscode.action('editor.action.revealDefinition') end, options)
+  keymap.set("n", "gh", vim.lsp.buf.hover, options)
+  keymap.set("n", "gd", vim.lsp.buf.definition, options)
+  keymap.set("n", "gt", vim.lsp.buf.type_definition, options)
+  keymap.set("n", "ga", vim.lsp.buf.code_action, options)
+  keymap.set("n", "<C-j>", function() vscode.action('editor.action.marker.next') end, options)
+  keymap.set("n", "<C-k>", function() vscode.action('editor.action.marker.prev') end, options)
+  keymap.set("n", "gr", vim.lsp.buf.rename, options)
 end
 
