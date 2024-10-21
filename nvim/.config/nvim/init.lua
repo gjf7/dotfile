@@ -334,7 +334,7 @@ if vim.g.vscode then
   local vscode = require('vscode')
   keymap.set("n", "gd", function() vscode.action('editor.action.revealDefinition') end, options)
   keymap.set("n", "gh", vim.lsp.buf.hover, options)
-  keymap.set("n", "gd", vim.lsp.buf.definition, options)
+  -- keymap.set("n", "gd", vim.lsp.buf.definition, options)
   keymap.set("n", "gt", vim.lsp.buf.type_definition, options)
   keymap.set("n", "ga", vim.lsp.buf.code_action, options)
   keymap.set("n", "<C-j>", function() vscode.action('editor.action.marker.next') end, options)
