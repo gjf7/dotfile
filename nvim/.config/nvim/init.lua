@@ -20,6 +20,11 @@ vim.opt.wildignore:append({ "*/node_modules/*" })
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.termguicolors = true
+vim.opt.foldcolumn = '1' -- '0' is not bad
+vim.opt.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+vim.opt.foldlevelstart = 99
+vim.opt.foldenable = true
+
 vim.opt.mouse = ""
 
 -- Key mappings
@@ -72,7 +77,8 @@ require("lazy").setup({
   {
     "gbprod/nord.nvim",
     cond = not vim.g.vscode,
-    config = function()
+    opts = {},
+    init = function()
       vim.g.nord_italic = false
       vim.g.nord_bold = false
       vim.cmd.colorscheme("nord")
@@ -83,16 +89,16 @@ require("lazy").setup({
   {
     'stevearc/oil.nvim',
     cond = not vim.g.vscode,
-    config = function()
-      require("oil").setup({
-        view_options = { show_hidden = true, },
-        float = {
-          max_width = 80,
-          max_height = 80,
-        },
-        delete_to_trash = true,
-        skip_confirm_for_simple_edits = true,
-      });
+    opts = {
+      view_options = { show_hidden = true, },
+      float = {
+        max_width = 80,
+        max_height = 80,
+      },
+      delete_to_trash = true,
+      skip_confirm_for_simple_edits = true,
+    },
+    init = function()
       keymap.set("n", "-", "<CMD>Oil --float<CR>", { desc = "Open parent directory" })
     end,
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -100,55 +106,53 @@ require("lazy").setup({
   {
     "lewis6991/gitsigns.nvim",
     cond = not vim.g.vscode,
-    config = function()
-      require('gitsigns').setup({
-        current_line_blame_opts = { delay= 100 },
-        on_attach = function(bufnr)
-          local gitsigns = require('gitsigns')
+    opts = {
+      current_line_blame_opts = { delay= 100 },
+      on_attach = function(bufnr)
+        local gitsigns = require('gitsigns')
 
-          local function map(mode, l, r, opts)
-            opts = opts or {}
-            opts.buffer = bufnr
-            vim.keymap.set(mode, l, r, opts)
-          end
-
-          -- Navigation
-          map('n', ']c', function()
-            if vim.wo.diff then
-              vim.cmd.normal({']c', bang = true})
-            else
-              gitsigns.nav_hunk('next')
-            end
-          end)
-
-          map('n', '[c', function()
-            if vim.wo.diff then
-              vim.cmd.normal({'[c', bang = true})
-            else
-              gitsigns.nav_hunk('prev')
-            end
-          end)
-
-          -- Actions
-          map('n', '<leader>hs', gitsigns.stage_hunk)
-          map('n', '<leader>hr', gitsigns.reset_hunk)
-          map('v', '<leader>hs', function() gitsigns.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
-          map('v', '<leader>hr', function() gitsigns.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
-          map('n', '<leader>hS', gitsigns.stage_buffer)
-          map('n', '<leader>hu', gitsigns.undo_stage_hunk)
-          map('n', '<leader>hR', gitsigns.reset_buffer)
-          map('n', '<leader>hp', gitsigns.preview_hunk)
-          map('n', '<leader>hb', function() gitsigns.blame_line{full=true} end)
-          map('n', '<leader>tb', gitsigns.toggle_current_line_blame)
-          map('n', '<leader>hd', gitsigns.diffthis)
-          map('n', '<leader>hD', function() gitsigns.diffthis('~') end)
-          map('n', '<leader>td', gitsigns.toggle_deleted)
-
-          -- Text object
-          map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+        local function map(mode, l, r, opts)
+          opts = opts or {}
+          opts.buffer = bufnr
+          vim.keymap.set(mode, l, r, opts)
         end
-      })
-    end,
+
+        -- Navigation
+        map('n', ']c', function()
+          if vim.wo.diff then
+            vim.cmd.normal({']c', bang = true})
+          else
+            gitsigns.nav_hunk('next')
+          end
+        end)
+
+        map('n', '[c', function()
+          if vim.wo.diff then
+            vim.cmd.normal({'[c', bang = true})
+          else
+            gitsigns.nav_hunk('prev')
+          end
+        end)
+
+        -- Actions
+        map('n', '<leader>hs', gitsigns.stage_hunk)
+        map('n', '<leader>hr', gitsigns.reset_hunk)
+        map('v', '<leader>hs', function() gitsigns.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
+        map('v', '<leader>hr', function() gitsigns.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
+        map('n', '<leader>hS', gitsigns.stage_buffer)
+        map('n', '<leader>hu', gitsigns.undo_stage_hunk)
+        map('n', '<leader>hR', gitsigns.reset_buffer)
+        map('n', '<leader>hp', gitsigns.preview_hunk)
+        map('n', '<leader>hb', function() gitsigns.blame_line{full=true} end)
+        map('n', '<leader>tb', gitsigns.toggle_current_line_blame)
+        map('n', '<leader>hd', gitsigns.diffthis)
+        map('n', '<leader>hD', function() gitsigns.diffthis('~') end)
+        map('n', '<leader>td', gitsigns.toggle_deleted)
+
+        -- Text object
+        map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+      end
+    },
   },
   {
     "nvim-treesitter/nvim-treesitter",
@@ -177,12 +181,12 @@ require("lazy").setup({
   {
     'nvimdev/lspsaga.nvim',
     cond = not vim.g.vscode,
-    config = function()
-      require('lspsaga').setup({
-        code_action = {
-          extend_gitsigns = true
-        }
-      })
+    opts = {
+      code_action = {
+        extend_gitsigns = true
+      }
+    },
+    init = function()
       keymap.set("n", "gh", "<cmd>Lspsaga hover_doc<CR>", options)
       keymap.set("n", "gd", "<cmd>Lspsaga goto_definition<CR>", options)
       -- keymap.set("n", "gt", "<cmd>Lspsaga goto_type_definition<CR>",options)
@@ -263,6 +267,17 @@ require("lazy").setup({
     cond = not vim.g.vscode,
     build = function() vim.fn["mkdp#util#install"]() end,
   },
+  {
+    "kevinhwang91/nvim-ufo",
+    dependencies = { 'kevinhwang91/promise-async' },
+    cond = not vim.g.vscode,
+    opts = {},
+    init = function ()
+      -- Using ufo provider need remap `zR` and `zM`.
+      vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+      vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+    end,
+  }
 })
 
 local builtin = require('telescope.builtin')
@@ -291,7 +306,15 @@ if not vim.g.vscode then
     ensure_installed = { "lua_ls", "clangd", "vtsls", "pyright", "eslint", "cssls", "typos_lsp" },
     handlers = {
       function (server_name) -- default handler (optional)
-        require("lspconfig")[server_name].setup({})
+        -- for nvim-ufo
+        local capabilities = vim.lsp.protocol.make_client_capabilities()
+        capabilities.textDocument.foldingRange = {
+          dynamicRegistration = false,
+          lineFoldingOnly = true
+        }
+        require("lspconfig")[server_name].setup({
+          capabilities = capabilities
+        })
       end,
       ["lua_ls"] = function ()
         lspconfig.lua_ls.setup({
@@ -329,6 +352,8 @@ if not vim.g.vscode then
     }
   })
 end
+
+---------------------------FOR VSCODE-------------------------------------------
 
 if vim.g.vscode then
   local vscode = require('vscode')
