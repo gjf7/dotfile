@@ -20,10 +20,13 @@ vim.opt.wildignore:append({ "*/node_modules/*" })
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.termguicolors = true
-vim.opt.foldcolumn = '1' -- '0' is not bad
-vim.opt.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
-vim.opt.foldlevelstart = 99
-vim.opt.foldenable = true
+vim.o.foldenable = true
+vim.o.fillchars = 'eob: ,fold: ,foldopen:,foldsep: ,foldclose:'
+vim.o.foldcolumn = '1'
+vim.o.foldexpr = 'v:lua.vim.lsp.foldexpr()'
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
+vim.o.foldmethod = 'expr'
 
 vim.opt.mouse = ""
 
@@ -267,17 +270,6 @@ require("lazy").setup({
     cond = not vim.g.vscode,
     build = function() vim.fn["mkdp#util#install"]() end,
   },
-  {
-    "kevinhwang91/nvim-ufo",
-    dependencies = { 'kevinhwang91/promise-async' },
-    cond = not vim.g.vscode,
-    opts = {},
-    init = function ()
-      -- Using ufo provider need remap `zR` and `zM`.
-      vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
-      vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
-    end,
-  }
 })
 
 local builtin = require('telescope.builtin')
@@ -306,15 +298,7 @@ if not vim.g.vscode then
     ensure_installed = { "lua_ls", "clangd", "vtsls", "pyright", "eslint", "cssls", "typos_lsp" },
     handlers = {
       function (server_name) -- default handler (optional)
-        -- for nvim-ufo
-        local capabilities = vim.lsp.protocol.make_client_capabilities()
-        capabilities.textDocument.foldingRange = {
-          dynamicRegistration = false,
-          lineFoldingOnly = true
-        }
-        require("lspconfig")[server_name].setup({
-          capabilities = capabilities
-        })
+        require("lspconfig")[server_name].setup({})
       end,
       ["lua_ls"] = function ()
         lspconfig.lua_ls.setup({
