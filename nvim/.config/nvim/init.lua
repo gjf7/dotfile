@@ -39,6 +39,7 @@ local options = { noremap = true, silent = true }
 keymap.set("n", "x", '"_x')
 keymap.set("n", "+", "<C-a>")
 keymap.set("n", "-", "<C-x>")
+keymap.set("n", "<space><space>x", "<cmd>source %<CR>")
 -- Select all
 keymap.set("n", "<C-a>", "gg<S-v>G") -- New tab
 -- Split window
@@ -63,6 +64,13 @@ vim.api.nvim_create_autocmd("InsertLeave", {
   callback = function()
     vim.wo.relativenumber = true
   end
+})
+
+-- Highlight when yanking text
+vim.api.nvim_create_autocmd('TextYankPost', {
+  callback = function()
+    vim.highlight.on_yank()
+  end,
 })
 
 -- Plugin manager
