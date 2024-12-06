@@ -278,6 +278,16 @@ require("lazy").setup({
     cond = not vim.g.vscode,
     build = function() vim.fn["mkdp#util#install"]() end,
   },
+  {
+    "karb94/neoscroll.nvim",
+    cond = not vim.g.vscode,
+    opts = {},
+  },
+  {
+    "sphamba/smear-cursor.nvim",
+    cond = not vim.g.vscode,
+    opts = {},
+  }
 })
 
 local builtin = require('telescope.builtin')
