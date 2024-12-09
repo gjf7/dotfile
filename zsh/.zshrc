@@ -10,6 +10,7 @@ export PATH="/opt/homebrew/lib/ruby/gems/3.3.0/bin:$PATH"
 
 alias ls="ls -lash"
 alias g="git"
+alias gs="git status"
 alias nvim="/usr/local/bin/nvim"
 
 if command -v nvim > /dev/null 2>&1; then
