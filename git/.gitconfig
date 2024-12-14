@@ -1,0 +1,38 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+	name = Hao Chen
+	email = 501018786@qq.com
+[alias]
+  # Steal from https://gist.github.com/AtkinsSJ/25ff28ab50dcd7175eab42b595740200
+  s = status
+
+  # Lists aliases
+  alias = config --get-regexp alias
+
+  # Force-push
+  pushf = push --force-with-lease
+
+  # Log, in a single-line format
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+
+    # Pull latest changes from upstream to main/master branch
+  sync = "!f() { \
+    main_branch=`git config --default master var.master-branch`; \
+    git checkout $main_branch && git pull -r upstream $main_branch; \
+  }; f"
+
+    # Pull latest changes from upstream, and then rebase current branch on them
+  sync-branch = "!f() { \
+    main_branch=`git config --default master var.master-branch`; \
+    current_branch=`git branch --show-current`; \
+    git sync; \
+    git checkout $current_branch; \
+    git rebase $main_branch; \
+  }; f"
+
+  reset1 = reset --mixed HEAD~1
+
+  count-lines = "! git log --author=\"$1\" --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf \"added lines: %s, removed lines: %s, total lines: %s\\n\", add, subs, loc }' #"
+[init]
+	defaultBranch = main
