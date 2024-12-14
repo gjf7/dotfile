@@ -2,9 +2,10 @@ vim.opt.number = true
 vim.opt.title = true
 vim.opt.smartindent = true
 vim.opt.smarttab = true
+-- treat tab as two spaces
 vim.opt.expandtab = true
 vim.opt.hlsearch = false
-vim.opt.history = 200 -- treat tab as two spaces
+vim.opt.history = 200
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.clipboard = "unnamedplus"
@@ -37,14 +38,9 @@ local keymap = vim.keymap
 local options = { noremap = true, silent = true }
 
 keymap.set("n", "x", '"_x')
-keymap.set("n", "+", "<C-a>")
-keymap.set("n", "-", "<C-x>")
 keymap.set("n", "<space><space>x", "<cmd>source %<CR>")
 -- Select all
-keymap.set("n", "<C-a>", "gg<S-v>G") -- New tab
--- Split window
--- keymap.set("n", "ss", ":split<Return>", options)
--- keymap.set("n", "sv", ":vsplit<Return>", options)
+keymap.set("n", "<C-a>", "gg<S-v>G")
 -- Resize window
 keymap.set("n", "<C-w><left>", "<C-w><")
 keymap.set("n", "<C-w><right>", "<C-w>>")
@@ -67,7 +63,7 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 })
 
 -- Highlight when yanking text
-vim.api.nvim_create_autocmd('TextYankPost', {
+vim.api.nvim_create_autocmd("TextYankPost", {
   callback = function()
     vim.highlight.on_yank()
   end,
@@ -96,7 +92,12 @@ require("lazy").setup({
     end,
   },
   "tpope/vim-commentary",
-  "tpope/vim-surround",
+  {
+    "kylechui/nvim-surround",
+    version = "*",
+    event = "VeryLazy",
+    opts = {},
+  },
   {
     'stevearc/oil.nvim',
     cond = not vim.g.vscode,
@@ -260,12 +261,11 @@ require("lazy").setup({
   {
     "folke/flash.nvim",
     event = "VeryLazy",
-    ---@type Flash.Config
     opts = {},
     -- stylua: ignore
     keys = {
       { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-      { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+      { "S", mode = { "n", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
       { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
       { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
       { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
