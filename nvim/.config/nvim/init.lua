@@ -91,7 +91,6 @@ require("lazy").setup({
       vim.cmd.colorscheme("nord")
     end,
   },
-  "tpope/vim-commentary",
   {
     "kylechui/nvim-surround",
     version = "*",
