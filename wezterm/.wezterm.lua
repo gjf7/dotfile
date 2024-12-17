@@ -10,6 +10,7 @@ config.font_size = 26
 config.line_height = 1.4
 config.enable_scroll_bar = true
 config.min_scroll_bar_height = '2cell'
+config.window_decorations = "RESIZE"
 
 
 return config
