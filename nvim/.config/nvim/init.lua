@@ -331,7 +331,10 @@ if not vim.g.vscode then
       end,
       ["clangd"] = function ()
         lspconfig.clangd.setup({
-          cmd = { "clangd", "--offset-encoding=utf-16" }
+          cmd = {'clangd', '--background-index', '--clang-tidy', '--log=verbose', "--offset-encoding=utf-16" },
+          init_options = {
+            fallbackFlags = { '-std=c++17' },
+          },
         })
       end,
       ["eslint"] = function ()
