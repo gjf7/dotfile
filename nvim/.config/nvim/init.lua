@@ -28,6 +28,7 @@ vim.o.foldexpr = 'v:lua.vim.lsp.foldexpr()'
 vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
 vim.o.foldmethod = 'expr'
+vim.wo.relativenumber = true
 
 vim.opt.mouse = ""
 
@@ -310,52 +311,30 @@ keymap.set('n', '<leader>fr', run_in_git_root(builtin.lsp_references), options)
 
 
 if not vim.g.vscode then
-  local lspconfig = require("lspconfig")
   require("mason").setup()
   require("mason-lspconfig").setup({
-    ensure_installed = { "lua_ls", "clangd", "vtsls", "pyright", "eslint", "cssls", "typos_lsp" },
-    handlers = {
-      function (server_name) -- default handler (optional)
-        require("lspconfig")[server_name].setup({})
-      end,
-      ["lua_ls"] = function ()
-        lspconfig.lua_ls.setup({
-          settings = {
-            Lua = {
-              diagnostics = {
-                globals = { "vim" }
-              }
-            }
-          }
-        })
-      end,
-      ["clangd"] = function ()
-        lspconfig.clangd.setup({
-          cmd = {'clangd', '--background-index', '--clang-tidy', '--log=verbose', "--offset-encoding=utf-16" },
-          init_options = {
-            fallbackFlags = { '-std=c++17' },
-          },
-        })
-      end,
-      ["eslint"] = function ()
-        lspconfig.eslint.setup({
-          on_attach = function(_, bufnr)
-            vim.api.nvim_create_autocmd("BufWritePre", {
-              buffer = bufnr,
-              command = "EslintFixAll",
-            })
-          end,
-        })
-      end,
-      ["typos_lsp"] = function ()
-        lspconfig.typos_lsp.setup({
-          init_options = {
-            diagnosticSeverity = "Hint"
-          }
-        })
-      end
-    }
+    ensure_installed = { "lua_ls", "clangd", "vtsls", "pyright", "eslint", "cssls", "typos_lsp" }
   })
+
+  vim.lsp.config.clangd = {
+    cmd = {'clangd', '--background-index', '--clang-tidy', '--log=verbose', "--offset-encoding=utf-16" },
+    init_options = {
+      fallbackFlags = { '-std=c++17' },
+    },
+  }
+  vim.lsp.config.eslint = {
+    on_attach = function(_, bufnr)
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        buffer = bufnr,
+        command = "EslintFixAll",
+      })
+    end,
+  }
+  vim.lsp.config.typos_lsp = {
+    init_options = {
+      diagnosticSeverity = "Hint"
+    }
+  }
 end
 
 ---------------------------FOR VSCODE-------------------------------------------
