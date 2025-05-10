@@ -316,25 +316,37 @@ if not vim.g.vscode then
     ensure_installed = { "lua_ls", "clangd", "vtsls", "pyright", "eslint", "cssls", "typos_lsp" }
   })
 
-  vim.lsp.config.clangd = {
+  vim.lsp.config('lua_ls', {
+    settings = {
+      Lua = {
+        diagnostics = {
+          globals = { "vim" }
+        }
+      }
+    }
+  })
+  vim.lsp.config('clangd', {
     cmd = {'clangd', '--background-index', '--clang-tidy', '--log=verbose', "--offset-encoding=utf-16" },
     init_options = {
       fallbackFlags = { '-std=c++17' },
     },
-  }
-  vim.lsp.config.eslint = {
+  })
+
+  local lspconfig = require("lspconfig")
+  lspconfig.eslint.setup({
     on_attach = function(_, bufnr)
       vim.api.nvim_create_autocmd("BufWritePre", {
         buffer = bufnr,
         command = "EslintFixAll",
       })
     end,
-  }
-  vim.lsp.config.typos_lsp = {
+  })
+
+  vim.lsp.config('typos_lsp', {
     init_options = {
       diagnosticSeverity = "Hint"
     }
-  }
+  })
 end
 
 ---------------------------FOR VSCODE-------------------------------------------
