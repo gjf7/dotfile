@@ -72,12 +72,12 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- Plugin manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim" if not vim.loop.fs_stat(lazypath) then
-	vim.fn.system({
-		"git", "clone", "--filter=blob:none",
-		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable", -- latest stable release
-		lazypath,
-	})
+  vim.fn.system({
+    "git", "clone", "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -325,6 +325,7 @@ if not vim.g.vscode then
       }
     }
   })
+
   vim.lsp.config('clangd', {
     cmd = {'clangd', '--background-index', '--clang-tidy', '--log=verbose', "--offset-encoding=utf-16" },
     init_options = {
