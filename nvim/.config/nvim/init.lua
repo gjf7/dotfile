@@ -333,12 +333,13 @@ if not vim.g.vscode then
     },
   })
 
-  local lspconfig = require("lspconfig")
-  lspconfig.eslint.setup({
-    on_attach = function(_, bufnr)
+  local base_on_attach = vim.lsp.config.eslint.on_attach
+  vim.lsp.config('eslint', {
+    on_attach = function(client, bufnr)
+      base_on_attach(client)
       vim.api.nvim_create_autocmd("BufWritePre", {
         buffer = bufnr,
-        command = "EslintFixAll",
+        command = "LspEslintFixAll",
       })
     end,
   })
