@@ -84,11 +84,11 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
   local out =
-    vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+      vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
+      { out,                            "WarningMsg" },
 
       { "\nPress any key to exit..." },
     }, true, {})
@@ -214,6 +214,7 @@ require("lazy").setup({
       "nvim-telescope/telescope.nvim",
       tag = "0.1.6",
       dependencies = { "nvim-lua/plenary.nvim" },
+      cond = not vim.g.vscode,
       config = function()
         local builtin = require("telescope.builtin")
         local function run_in_git_root(fn)
@@ -235,6 +236,7 @@ require("lazy").setup({
     },
     {
       "folke/lazydev.nvim",
+      cond = not vim.g.vscode,
       ft = "lua",
       opts = {
         library = {
@@ -245,6 +247,7 @@ require("lazy").setup({
     },
     {
       "saghen/blink.cmp",
+      cond = not vim.g.vscode,
       -- optional: provides snippets for the snippet source
       dependencies = { "rafamadriz/friendly-snippets" },
 
@@ -344,6 +347,7 @@ require("lazy").setup({
           javascriptreact = { "eslint_d" },
           typescript = { "eslint_d" },
           typescriptreact = { "eslint_d" },
+          astro = { "eslint_d" },
           ["_"] = { "trim_whitespace" },
         },
         format_on_save = {
@@ -443,6 +447,9 @@ end, {
 local augroup = vim.api.nvim_create_augroup("my.config", {})
 
 local function on_attach(client, bufnr)
+  if vim.g.vscode then
+    return
+  end
   -- map("n", "gh", "<cmd>Lspsaga hover_doc<CR>")
   map("n", "gr", "<cmd>Lspsaga rename<CR>")
   map("n", "gd", "<cmd>Lspsaga goto_definition<CR>")
@@ -544,11 +551,11 @@ end
 
 if vim.g.vscode then
   local vscode = require("vscode")
-  map("n", "gd", function()
-    vscode.action("editor.action.revealDefinition")
-  end)
+  -- map("n", "gd", function()
+  --   vscode.action("editor.action.revealDefinition")
+  -- end)
   map("n", "gh", vim.lsp.buf.hover)
-  map("n", "gd", vim.lsp.buf.definition)
+  -- map("n", "gd", vim.lsp.buf.definition)
   map("n", "gt", vim.lsp.buf.type_definition)
   map("n", "ga", vim.lsp.buf.code_action)
   map("n", "<C-j>", function()
