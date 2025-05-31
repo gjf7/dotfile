@@ -1,0 +1,139 @@
+{
+  "workbench.colorTheme": "Nord",
+  "workbench.iconTheme": "material-icon-theme",
+
+  // Editor
+  "editor.rulers": [ 100 ],
+  "editor.fontSize": 16,
+  "editor.lineHeight": 32,
+  "editor.fontFamily": "DankMono Nerd Font, Fira Code",
+  "editor.fontLigatures": true,
+  "editor.accessibilitySupport": "off",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.guides.bracketPairs": "active",
+  "editor.inlineSuggest.enabled": true,
+  "editor.renderWhitespace": "boundary",
+  "editor.suggestSelection": "first",
+  "editor.tabSize": 2,
+  "editor.unicodeHighlight.invisibleCharacters": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "never"
+  },
+  "window.title": "${activeEditorLong}",
+  "window.commandCenter": false,
+  "files.hotExit": "onExitAndWindowClose",
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "files.eol": "\n",
+  "workbench.editor.enablePreview": false,
+  "workbench.list.openMode": "doubleClick",
+  "workbench.startupEditor": "none",
+
+  // Explorer
+  "explorer.autoReveal": false,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.compactFolders": false,
+  "workbench.panel.defaultLocation": "right",
+
+  // Disable annoying stuff
+  "editor.dragAndDrop": false,
+  "explorer.enableDragAndDrop": false,
+  "extensions.ignoreRecommendations": true,
+  "git.ignoreLegacyWarning": true,
+
+  // Disable telemetry
+  "telemetry.enableCrashReporter": false,
+  "telemetry.enableTelemetry": false,
+
+  // Misc
+  "git.autofetch": true,
+  "cSpell.language": "en,en-US",
+  "prettier.requireConfig": true,
+  "editor.formatOnSave": true,
+  "search.exclude": {
+    // Frontend stuff
+    "**/.git": true,
+    "**/.github": true,
+    "**/.nuxt": true,
+    "**/.output": true,
+    "**/.pnpm": true,
+    "**/.vscode": true,
+    "**/.yarn": true,
+    "**/bower_components": true,
+    "**/dist/**": true,
+    "**/logs": true,
+    "**/node_modules": true,
+    "**/out/**": true,
+    "**/package-lock.json": true,
+    "**/pnpm-lock.yaml": true,
+    "**/tmp": true,
+    "**/yarn.lock": true,
+
+    // Ignore python object files
+    "**/*.pyc": true,
+    "**/*.pyo": true,
+
+    // Ignore C/C++ object files (Linux)
+    "**/*.a": true,
+    "**/*.d": true,
+    "**/*.gcda": true,
+    "**/*.gcno": true,
+    "**/*.gcov": true,
+    "**/*.o": true,
+    "**/*.so": true,
+
+    // Ignore C/C++ object files (Windows)
+    "**/.tlog": true,
+    "**/.vs": true,
+    "**/*.cache": true,
+    "**/*.dll": true,
+    "**/*.dylib": true,
+    "**/*.exe": true,
+    "**/*.idb": true,
+    "**/*.ilk": true,
+    "**/*.iobj": true,
+    "**/*.ipdb": true,
+    "**/*.lib": true,
+    "**/*.ncb": true,
+    "**/*.obj": true,
+    "**/*.pdb": true,
+    "**/*.sdf": true,
+    "**/*.suo": true,
+    "**/*.tlog": true,
+
+    // Ignore Java object files
+    "**/*.class": true,
+
+    // Ignore annoying OS files
+    "**/.DS_Store": true,
+    "**/*.db": true,
+  },
+
+  "gitlens.gitCommands.skipConfirmations": [
+    "fetch:command",
+    "stash-push:command",
+    "switch:command",
+    "stash-apply:command"
+  ],
+  "[python]": {
+    "editor.formatOnType": true
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "extensions.experimental.affinity": {
+    "asvetliakov.vscode-neovim": 1
+  },
+}
+
