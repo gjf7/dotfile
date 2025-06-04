@@ -1,9 +1,10 @@
 {
   "workbench.colorTheme": "Nord",
   "workbench.iconTheme": "material-icon-theme",
-
   // Editor
-  "editor.rulers": [ 100 ],
+  "editor.rulers": [
+    100
+  ],
   "editor.fontSize": 16,
   "editor.lineHeight": 32,
   "editor.fontFamily": "DankMono Nerd Font, Fira Code",
@@ -17,7 +18,8 @@
   "editor.tabSize": 2,
   "editor.unicodeHighlight.invisibleCharacters": false,
   "editor.codeActionsOnSave": {
-    "source.fixAll": "never"
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "never"
   },
   "window.title": "${activeEditorLong}",
   "window.commandCenter": false,
@@ -29,24 +31,20 @@
   "workbench.editor.enablePreview": false,
   "workbench.list.openMode": "doubleClick",
   "workbench.startupEditor": "none",
-
   // Explorer
   "explorer.autoReveal": false,
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
   "explorer.compactFolders": false,
   "workbench.panel.defaultLocation": "right",
-
   // Disable annoying stuff
   "editor.dragAndDrop": false,
   "explorer.enableDragAndDrop": false,
   "extensions.ignoreRecommendations": true,
   "git.ignoreLegacyWarning": true,
-
   // Disable telemetry
   "telemetry.enableCrashReporter": false,
   "telemetry.enableTelemetry": false,
-
   // Misc
   "git.autofetch": true,
   "cSpell.language": "en,en-US",
@@ -70,11 +68,9 @@
     "**/pnpm-lock.yaml": true,
     "**/tmp": true,
     "**/yarn.lock": true,
-
     // Ignore python object files
     "**/*.pyc": true,
     "**/*.pyo": true,
-
     // Ignore C/C++ object files (Linux)
     "**/*.a": true,
     "**/*.d": true,
@@ -83,7 +79,6 @@
     "**/*.gcov": true,
     "**/*.o": true,
     "**/*.so": true,
-
     // Ignore C/C++ object files (Windows)
     "**/.tlog": true,
     "**/.vs": true,
@@ -102,15 +97,12 @@
     "**/*.sdf": true,
     "**/*.suo": true,
     "**/*.tlog": true,
-
     // Ignore Java object files
     "**/*.class": true,
-
     // Ignore annoying OS files
     "**/.DS_Store": true,
     "**/*.db": true,
   },
-
   "gitlens.gitCommands.skipConfirmations": [
     "fetch:command",
     "stash-push:command",
@@ -119,18 +111,6 @@
   ],
   "[python]": {
     "editor.formatOnType": true
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "extensions.experimental.affinity": {
     "asvetliakov.vscode-neovim": 1
