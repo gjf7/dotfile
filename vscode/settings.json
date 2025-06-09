@@ -49,7 +49,7 @@
   "git.autofetch": true,
   "cSpell.language": "en,en-US",
   "prettier.requireConfig": true,
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "search.exclude": {
     // Frontend stuff
     "**/.git": true,
@@ -116,4 +116,3 @@
     "asvetliakov.vscode-neovim": 1
   },
 }
-
