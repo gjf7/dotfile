@@ -8,6 +8,12 @@ export PATH="/opt/homebrew/opt/openjdk@11/bin:$PATH"
 export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 export PATH="/opt/homebrew/lib/ruby/gems/3.3.0/bin:$PATH"
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+export GOOGLE_CLOUD_PROJECT="bamboo-truck-464102-q9"
+export GEMINI_MODEL="gemini-2.5-pro"
+export HISTFILE="$HOME/.zsh_history"
+export HISTSIZE=1000000000
+export SAVEHIST=1000000000
+setopt EXTENDED_HISTORY
 
 alias ls="ls -lash"
 alias g="git"
