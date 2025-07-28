@@ -1,33 +1,25 @@
-vim.opt.number = true
-vim.opt.title = true
-vim.opt.smartindent = true
-vim.opt.smarttab = true
+vim.o.number = true
+vim.o.title = true
+vim.o.smartindent = true
+vim.o.smarttab = true
 -- treat tab as two spaces
-vim.opt.expandtab = true
-vim.opt.hlsearch = false
-vim.opt.history = 200
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.clipboard = "unnamedplus"
-vim.opt.scrolloff = 10
-vim.opt.smartindent = true
-vim.opt.inccommand = "nosplit"
-vim.opt.ignorecase = true
-vim.opt.list = true
-vim.opt.listchars = {
-  eol = "↲",
-  tab = "→ ",
-  trail = "·",
-  nbsp = ":",
-  space = "·",
-  extends = "›",
-  precedes = "‹",
-}
-vim.opt.path:append({ "**" })
-vim.opt.wildignore:append({ "*/node_modules/*" })
-vim.opt.splitbelow = true
-vim.opt.splitright = true
-vim.opt.termguicolors = true
+vim.o.expandtab = true
+vim.o.hlsearch = false
+vim.o.history = 200
+vim.o.tabstop = 2
+vim.o.shiftwidth = 2
+vim.o.clipboard = "unnamedplus"
+vim.o.scrolloff = 10
+vim.o.smartindent = true
+vim.o.inccommand = "nosplit"
+vim.o.ignorecase = true
+vim.o.list = true
+vim.o.listchars = "eol:↲,tab:→ ,trail:·,nbsp::,space:·,extends:›,precedes:‹"
+vim.o.path = vim.o.path .. ",**"
+vim.o.wildignore = vim.o.wildignore .. ",*/node_modules/*"
+vim.o.splitbelow = true
+vim.o.splitright = true
+vim.o.termguicolors = true
 vim.o.showmode = false
 vim.o.foldenable = true
 vim.o.fillchars = "eob: ,fold: ,foldopen:,foldsep: ,foldclose:"
@@ -39,7 +31,7 @@ vim.o.foldmethod = "expr"
 vim.o.winborder = "single"
 vim.wo.relativenumber = true
 
-vim.opt.mouse = "a"
+vim.o.mouse = "a"
 
 -- Key mappings
 vim.g.mapleader = " " -- Make sure to set `mapleader` before lazy so your mappings are correct
@@ -84,12 +76,11 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
   local out =
-    vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+      vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
-
+      { out,                            "WarningMsg" },
       { "\nPress any key to exit..." },
     }, true, {})
     vim.fn.getchar()
