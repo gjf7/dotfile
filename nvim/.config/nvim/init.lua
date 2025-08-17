@@ -202,12 +202,12 @@ require("lazy").setup({
       cond = not vim.g.vscode,
     },
     {
-      "nvim-telescope/telescope.nvim",
-      tag = "0.1.6",
-      dependencies = { "nvim-lua/plenary.nvim" },
+      "ibhagwan/fzf-lua",
+      dependencies = { "nvim-tree/nvim-web-devicons" },
       cond = not vim.g.vscode,
+      opts = { "hide" },
       config = function()
-        local builtin = require("telescope.builtin")
+        local builtin = require("fzf-lua")
         local function run_in_git_root(fn)
           return function()
             local root = string.gsub(vim.fn.system("git rev-parse --show-toplevel"), "\n", "")
@@ -218,10 +218,9 @@ require("lazy").setup({
             end
           end
         end
-        map("n", "<leader>ff", run_in_git_root(builtin.find_files))
+        map("n", "<leader>ff", run_in_git_root(builtin.git_files))
         map("n", "<leader>fg", run_in_git_root(builtin.live_grep))
-        map("n", "<leader>fb", run_in_git_root(builtin.buffers))
-        map("n", "<leader>fh", run_in_git_root(builtin.help_tags))
+        map("n", "<leader>fh", run_in_git_root(builtin.helptags))
         map("n", "<leader>fx", run_in_git_root(builtin.resume))
       end,
     },
@@ -448,10 +447,9 @@ local function on_attach(client, bufnr)
   map("n", "grr", "<cmd>Lspsaga finder<CR>")
   map("n", "<C-j>", "<cmd>Lspsaga diagnostic_jump_next<CR>")
   map("n", "<C-k>", "<cmd>Lspsaga diagnostic_jump_prev<CR>")
-  map("n", "gi", require("telescope.builtin").lsp_implementations)
-  map("n", "gO", require("telescope.builtin").lsp_document_symbols)
-  map("n", "gW", require("telescope.builtin").lsp_dynamic_workspace_symbols)
-  map("n", "grt", require("telescope.builtin").lsp_type_definitions)
+  map("n", "gi", require("fzf-lua").lsp_implementations)
+  map("n", "gO", require("fzf-lua").lsp_document_symbols)
+  map("n", "grt", require("fzf-lua").lsp_typedefs)
   map("n", "gK", function()
     vim.diagnostic.open_float()
   end, { buffer = 0, desc = "Toggle diagnostics window." })
