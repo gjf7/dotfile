@@ -102,6 +102,11 @@ require("lazy").setup({
       end,
     },
     {
+      "github/copilot.vim",
+      cond = not vim.g.vscode,
+      opts = {},
+    },
+    {
       "kylechui/nvim-surround",
       version = "*",
       event = "VeryLazy",
@@ -132,14 +137,14 @@ require("lazy").setup({
         on_attach = function(bufnr)
           local gitsigns = require("gitsigns")
 
-          local function map(mode, l, r, opts)
+          local function kmap(mode, l, r, opts)
             opts = opts or {}
             opts.buffer = bufnr
             vim.keymap.set(mode, l, r, opts)
           end
 
           -- Navigation
-          map("n", "]c", function()
+          kmap("n", "]c", function()
             if vim.wo.diff then
               vim.cmd.normal({ "]c", bang = true })
             else
@@ -147,7 +152,7 @@ require("lazy").setup({
             end
           end)
 
-          map("n", "[c", function()
+          kmap("n", "[c", function()
             if vim.wo.diff then
               vim.cmd.normal({ "[c", bang = true })
             else
@@ -156,31 +161,31 @@ require("lazy").setup({
           end)
 
           -- Actions
-          map("n", "<leader>hs", gitsigns.stage_hunk)
-          map("n", "<leader>hr", gitsigns.reset_hunk)
-          map("v", "<leader>hs", function()
+          kmap("n", "<leader>hs", gitsigns.stage_hunk)
+          kmap("n", "<leader>hr", gitsigns.reset_hunk)
+          kmap("v", "<leader>hs", function()
             gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
           end)
-          map("v", "<leader>hr", function()
+          kmap("v", "<leader>hr", function()
             gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
           end)
-          map("n", "<leader>hS", gitsigns.stage_buffer)
-          map("n", "<leader>hR", gitsigns.reset_buffer)
-          map("n", "<leader>hp", gitsigns.preview_hunk)
-          map("n", "<leader>hi", gitsigns.preview_hunk_inline)
-          map("n", "<leader>hb", function()
+          kmap("n", "<leader>hS", gitsigns.stage_buffer)
+          kmap("n", "<leader>hR", gitsigns.reset_buffer)
+          kmap("n", "<leader>hp", gitsigns.preview_hunk)
+          kmap("n", "<leader>hi", gitsigns.preview_hunk_inline)
+          kmap("n", "<leader>hb", function()
             gitsigns.blame_line({ full = true })
           end)
-          map("n", "<leader>hd", gitsigns.diffthis)
-          map("n", "<leader>hD", function()
+          kmap("n", "<leader>hd", gitsigns.diffthis)
+          kmap("n", "<leader>hD", function()
             gitsigns.diffthis("~")
           end)
 
           --
-          map("n", "<leader>tb", gitsigns.toggle_current_line_blame)
+          kmap("n", "<leader>tb", gitsigns.toggle_current_line_blame)
 
           -- Text object
-          map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>")
+          kmap({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>")
         end,
       },
     },
@@ -436,7 +441,7 @@ end, {
 
 local augroup = vim.api.nvim_create_augroup("my.config", {})
 
-local function on_attach(client, bufnr)
+local function on_attach()
   if vim.g.vscode then
     return
   end
