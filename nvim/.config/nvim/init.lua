@@ -76,11 +76,11 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
   local out =
-    vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+      vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
+      { out,                            "WarningMsg" },
       { "\nPress any key to exit..." },
     }, true, {})
     vim.fn.getchar()
@@ -104,7 +104,14 @@ require("lazy").setup({
     {
       "github/copilot.vim",
       cond = not vim.g.vscode,
+    },
+    {
+      "olimorris/codecompanion.nvim",
       opts = {},
+      dependencies = {
+        "nvim-lua/plenary.nvim",
+        "nvim-treesitter/nvim-treesitter",
+      },
     },
     {
       "kylechui/nvim-surround",
@@ -223,10 +230,11 @@ require("lazy").setup({
             end
           end
         end
-        map("n", "<leader>ff", run_in_git_root(builtin.git_files))
+        map("n", "<leader>ff", run_in_git_root(builtin.files))
         map("n", "<leader>fg", run_in_git_root(builtin.live_grep))
         map("n", "<leader>fh", run_in_git_root(builtin.helptags))
         map("n", "<leader>fx", run_in_git_root(builtin.resume))
+        map("n", "<leader>fx", builtin.tabs)
       end,
     },
     {
@@ -283,6 +291,9 @@ require("lazy").setup({
         -- elsewhere in your config, without redefining it, due to `opts_extend`
         sources = {
           default = { "lsp", "path", "snippets", "buffer" },
+          per_filetype = {
+            codecompanion = { "codecompanion" },
+          }
         },
 
         signature = { enabled = true },
@@ -324,6 +335,9 @@ require("lazy").setup({
         code_action = {
           extend_gitsigns = true,
         },
+        lightbulb = {
+          sign = false
+        }
       },
       dependencies = {
         "nvim-treesitter/nvim-treesitter",
