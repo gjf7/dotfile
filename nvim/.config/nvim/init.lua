@@ -199,7 +199,6 @@ require("lazy").setup({
     {
       "nvim-treesitter/nvim-treesitter",
       build = ":TSUpdate",
-      cond = not vim.g.vscode,
       main = "nvim-treesitter.configs",
       opts = {
         auto_install = true,
@@ -212,6 +211,13 @@ require("lazy").setup({
       main = "ibl",
       opts = {},
       cond = not vim.g.vscode,
+    },
+    {
+      "m4xshen/smartcolumn.nvim",
+      cond = not vim.g.vscode,
+      opts = {
+        colorcolumn = "140"
+      }
     },
     {
       "ibhagwan/fzf-lua",
@@ -562,7 +568,7 @@ if vim.g.vscode then
   -- map("n", "gd", function()
   --   vscode.action("editor.action.revealDefinition")
   -- end)
-  map("n", "gh", vim.lsp.buf.hover)
+  -- map("n", "gh", vim.lsp.buf.hover)
   -- map("n", "gd", vim.lsp.buf.definition)
   map("n", "gt", vim.lsp.buf.type_definition)
   map("n", "ga", vim.lsp.buf.code_action)
