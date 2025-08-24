@@ -30,6 +30,8 @@ vim.o.foldlevelstart = 99
 vim.o.foldmethod = "expr"
 vim.o.winborder = "single"
 vim.wo.relativenumber = true
+vim.o.spell = true
+vim.o.spelllang = "en-us"
 
 vim.o.mouse = "a"
 
@@ -76,11 +78,11 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
   local out =
-      vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+    vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out,                            "WarningMsg" },
+      { out, "WarningMsg" },
       { "\nPress any key to exit..." },
     }, true, {})
     vim.fn.getchar()
@@ -127,6 +129,9 @@ require("lazy").setup({
         float = {
           max_width = 80,
           max_height = 80,
+        },
+        keymaps = {
+          ["<C-v>"] = { "actions.select", opts = { vertical = true } },
         },
         delete_to_trash = true,
         skip_confirm_for_simple_edits = true,
@@ -216,8 +221,8 @@ require("lazy").setup({
       "m4xshen/smartcolumn.nvim",
       cond = not vim.g.vscode,
       opts = {
-        colorcolumn = "140"
-      }
+        colorcolumn = "140",
+      },
     },
     {
       "ibhagwan/fzf-lua",
@@ -299,7 +304,7 @@ require("lazy").setup({
           default = { "lsp", "path", "snippets", "buffer" },
           per_filetype = {
             codecompanion = { "codecompanion" },
-          }
+          },
         },
 
         signature = { enabled = true },
@@ -342,8 +347,8 @@ require("lazy").setup({
           extend_gitsigns = true,
         },
         lightbulb = {
-          sign = false
-        }
+          sign = false,
+        },
       },
       dependencies = {
         "nvim-treesitter/nvim-treesitter",
