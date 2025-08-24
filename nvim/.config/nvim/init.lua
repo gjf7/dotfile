@@ -30,8 +30,6 @@ vim.o.foldlevelstart = 99
 vim.o.foldmethod = "expr"
 vim.o.winborder = "single"
 vim.wo.relativenumber = true
-vim.o.spell = true
-vim.o.spelllang = "en-us"
 
 vim.o.mouse = "a"
 
