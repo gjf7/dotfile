@@ -330,6 +330,7 @@ require("lazy").setup({
               "pyright",
               "cssls",
               "typos_lsp",
+              "rust_analyzer",
             },
           },
         },
@@ -542,20 +543,15 @@ local function config_lsp()
     },
   })
 
-  -- local base_on_attach = vim.lsp.config.eslint.on_attach
-  -- vim.lsp.config('eslint', {
-  --   on_attach = function(client, bufnr)
-  --     base_on_attach(client, bufnr)
-  --     vim.api.nvim_create_autocmd("BufWritePre", {
-  --       buffer = bufnr,
-  --       command = "LspEslintFixAll",
-  --     })
-  --   end,
-  -- })
-
   vim.lsp.config("typos_lsp", {
     init_options = {
       diagnosticSeverity = "Hint",
+    },
+  })
+
+  vim.lsp.config("rust_analyzer", {
+    settings = {
+      ["rust-analyzer"] = {},
     },
   })
 end
