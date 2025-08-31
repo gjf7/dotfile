@@ -431,16 +431,6 @@ require("lazy").setup({
         },
       },
     },
-    {
-      "karb94/neoscroll.nvim",
-      cond = not vim.g.vscode,
-      opts = {},
-    },
-    {
-      "sphamba/smear-cursor.nvim",
-      cond = not vim.g.vscode,
-      opts = {},
-    },
   },
   checker = { enabled = true, notify = false },
 })
