@@ -76,11 +76,11 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
   local out =
-    vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+      vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
+      { out,                            "WarningMsg" },
       { "\nPress any key to exit..." },
     }, true, {})
     vim.fn.getchar()
@@ -331,6 +331,7 @@ require("lazy").setup({
               "cssls",
               "typos_lsp",
               "rust_analyzer",
+              "eslint",
             },
           },
         },
@@ -356,6 +357,7 @@ require("lazy").setup({
     },
     {
       "stevearc/conform.nvim",
+      cond = not vim.g.vscode,
       event = { "BufWritePre" },
       cmd = { "ConformInfo" },
       opts = {
@@ -372,7 +374,7 @@ require("lazy").setup({
         format_on_save = {
           -- I recommend these options. See :help conform.format for details.
           lsp_format = "fallback",
-          timeout_ms = 500,
+          timeout_ms = 2000,
         },
       },
     },
@@ -498,6 +500,52 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 local function config_lsp()
+  local eslint_rules_customations = {
+    { rule = 'style/*',   severity = 'off', fixable = true },
+    { rule = 'format/*',  severity = 'off', fixable = true },
+    { rule = '*-indent',  severity = 'off', fixable = true },
+    { rule = '*-spacing', severity = 'off', fixable = true },
+    { rule = '*-spaces',  severity = 'off', fixable = true },
+    { rule = '*-order',   severity = 'off', fixable = true },
+    { rule = '*-dangle',  severity = 'off', fixable = true },
+    { rule = '*-newline', severity = 'off', fixable = true },
+    { rule = '*quotes',   severity = 'off', fixable = true },
+    { rule = '*semi',     severity = 'off', fixable = true },
+  }
+
+  vim.lsp.config("eslint", {
+    filetypes = {
+      "javascript",
+      "javascriptreact",
+      "javascript.jsx",
+      "typescript",
+      "typescriptreact",
+      "typescript.tsx",
+      "vue",
+      "html",
+      "markdown",
+      "json",
+      "jsonc",
+      "yaml",
+      "toml",
+      "xml",
+      "gql",
+      "graphql",
+      "astro",
+      "svelte",
+      "css",
+      "less",
+      "scss",
+      "pcss",
+      "postcss"
+    },
+    settings = {
+      -- Silent the stylistic rules in you IDE, but still auto fix them
+      rulesCustomizations = eslint_rules_customations,
+    }
+  })
+
+
   vim.lsp.config("lua_ls", {
     settings = {
       Lua = {
