@@ -93,7 +93,7 @@ require("lazy").setup({
   spec = {
     {
       "gbprod/nord.nvim",
-      cond = not vim.g.vscode,
+      cond = false,
       opts = {},
       init = function()
         vim.g.nord_italic = false
@@ -102,8 +102,11 @@ require("lazy").setup({
       end,
     },
     {
+      "rmehri01/onenord.nvim",
+      opts = {},
+    },
+    {
       "github/copilot.vim",
-      cond = not vim.g.vscode,
     },
     {
       "olimorris/codecompanion.nvim",
@@ -115,13 +118,13 @@ require("lazy").setup({
     },
     {
       "kylechui/nvim-surround",
+      cond = true,
       version = "*",
       event = "VeryLazy",
       opts = {},
     },
     {
       "stevearc/oil.nvim",
-      cond = not vim.g.vscode,
       opts = {
         view_options = { show_hidden = true },
         float = {
@@ -141,7 +144,6 @@ require("lazy").setup({
     },
     {
       "lewis6991/gitsigns.nvim",
-      cond = not vim.g.vscode,
       opts = {
         current_line_blame_opts = { delay = 100 },
         on_attach = function(bufnr)
@@ -201,6 +203,7 @@ require("lazy").setup({
     },
     {
       "nvim-treesitter/nvim-treesitter",
+      cond = true,
       build = ":TSUpdate",
       main = "nvim-treesitter.configs",
       opts = {
@@ -213,11 +216,9 @@ require("lazy").setup({
       "lukas-reineke/indent-blankline.nvim",
       main = "ibl",
       opts = {},
-      cond = not vim.g.vscode,
     },
     {
       "m4xshen/smartcolumn.nvim",
-      cond = not vim.g.vscode,
       opts = {
         colorcolumn = "140",
       },
@@ -225,7 +226,6 @@ require("lazy").setup({
     {
       "ibhagwan/fzf-lua",
       dependencies = { "nvim-tree/nvim-web-devicons" },
-      cond = not vim.g.vscode,
       opts = { "hide" },
       config = function()
         local builtin = require("fzf-lua")
@@ -248,7 +248,6 @@ require("lazy").setup({
     },
     {
       "folke/lazydev.nvim",
-      cond = not vim.g.vscode,
       ft = "lua",
       opts = {
         library = {
@@ -259,7 +258,6 @@ require("lazy").setup({
     },
     {
       "saghen/blink.cmp",
-      cond = not vim.g.vscode,
       -- optional: provides snippets for the snippet source
       dependencies = { "rafamadriz/friendly-snippets" },
 
@@ -340,7 +338,6 @@ require("lazy").setup({
     {
 
       "nvimdev/lspsaga.nvim",
-      cond = not vim.g.vscode,
       event = "LspAttach",
       opts = {
         code_action = {
@@ -357,7 +354,6 @@ require("lazy").setup({
     },
     {
       "stevearc/conform.nvim",
-      cond = not vim.g.vscode,
       event = { "BufWritePre" },
       cmd = { "ConformInfo" },
       opts = {
@@ -382,12 +378,12 @@ require("lazy").setup({
       "nvim-lualine/lualine.nvim",
       dependencies = { "nvim-tree/nvim-web-devicons" },
       opts = {
-        options = { theme = "nord" },
+        options = { theme = "onenord" },
       },
-      cond = not vim.g.vscode,
     },
     {
       "folke/flash.nvim",
+      cond = true,
       event = "VeryLazy",
       opts = {},
       keys = {
@@ -434,6 +430,7 @@ require("lazy").setup({
       },
     },
   },
+  defaults = { cond = not vim.g.vscode },
   checker = { enabled = true, notify = false },
 })
 
