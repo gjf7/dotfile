@@ -10,7 +10,6 @@ vim.o.tabstop = 2
 vim.o.shiftwidth = 2
 vim.o.clipboard = "unnamedplus"
 vim.o.scrolloff = 10
-vim.o.smartindent = true
 vim.o.inccommand = "nosplit"
 vim.o.ignorecase = true
 vim.o.list = true
@@ -103,7 +102,9 @@ require("lazy").setup({
     },
     {
       "rmehri01/onenord.nvim",
-      opts = {},
+      opts = {
+        theme = "dark",
+      },
     },
     {
       "github/copilot.vim",
