@@ -17,11 +17,6 @@
   "editor.suggestSelection": "first",
   "editor.tabSize": 2,
   "editor.unicodeHighlight.invisibleCharacters": false,
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit",
-    "source.organizeImports": "never"
-  },
   "window.title": "${activeEditorLong}",
   "window.commandCenter": false,
   "files.hotExit": "onExitAndWindowClose",
@@ -46,6 +41,9 @@
   // Disable telemetry
   "telemetry.enableCrashReporter": false,
   "telemetry.enableTelemetry": false,
+  // Rust
+  "rust-analyzer.check.command": "clippy",
+  "rust-analyzer.checkOnSave": true,
   // Eslint
   "prettier.enable": false,
   "editor.formatOnSave": false,

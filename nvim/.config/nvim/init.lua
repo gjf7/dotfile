@@ -76,11 +76,11 @@ local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
   local out =
-      vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+    vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out,                            "WarningMsg" },
+      { out, "WarningMsg" },
       { "\nPress any key to exit..." },
     }, true, {})
     vim.fn.getchar()
@@ -501,16 +501,16 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 local function config_lsp()
   local eslint_rules_customations = {
-    { rule = 'style/*',   severity = 'off', fixable = true },
-    { rule = 'format/*',  severity = 'off', fixable = true },
-    { rule = '*-indent',  severity = 'off', fixable = true },
-    { rule = '*-spacing', severity = 'off', fixable = true },
-    { rule = '*-spaces',  severity = 'off', fixable = true },
-    { rule = '*-order',   severity = 'off', fixable = true },
-    { rule = '*-dangle',  severity = 'off', fixable = true },
-    { rule = '*-newline', severity = 'off', fixable = true },
-    { rule = '*quotes',   severity = 'off', fixable = true },
-    { rule = '*semi',     severity = 'off', fixable = true },
+    { rule = "style/*", severity = "off", fixable = true },
+    { rule = "format/*", severity = "off", fixable = true },
+    { rule = "*-indent", severity = "off", fixable = true },
+    { rule = "*-spacing", severity = "off", fixable = true },
+    { rule = "*-spaces", severity = "off", fixable = true },
+    { rule = "*-order", severity = "off", fixable = true },
+    { rule = "*-dangle", severity = "off", fixable = true },
+    { rule = "*-newline", severity = "off", fixable = true },
+    { rule = "*quotes", severity = "off", fixable = true },
+    { rule = "*semi", severity = "off", fixable = true },
   }
 
   vim.lsp.config("eslint", {
@@ -537,14 +537,13 @@ local function config_lsp()
       "less",
       "scss",
       "pcss",
-      "postcss"
+      "postcss",
     },
     settings = {
       -- Silent the stylistic rules in you IDE, but still auto fix them
       rulesCustomizations = eslint_rules_customations,
-    }
+    },
   })
-
 
   vim.lsp.config("lua_ls", {
     settings = {
@@ -589,7 +588,12 @@ local function config_lsp()
 
   vim.lsp.config("rust_analyzer", {
     settings = {
-      ["rust-analyzer"] = {},
+      ["rust-analyzer"] = {
+        check = {
+          command = "clippy",
+          checkOnSave = true,
+        },
+      },
     },
   })
 end
